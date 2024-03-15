@@ -18,6 +18,7 @@ use Konnco\FilamentImport\Concerns\HasTemporaryDisk;
 use Konnco\FilamentImport\Import;
 use Livewire\TemporaryUploadedFile;
 use Maatwebsite\Excel\Concerns\Importable;
+use Illuminate\Support\Facades\App;
 
 class ImportAction extends Action
 {
@@ -66,7 +67,7 @@ class ImportAction extends Action
                     ->formSchemas($this->fields)
                     ->uniqueField($this->uniqueField)
                     ->model($model)
-                    ->disk('local')
+                    ->disk($this->getTemporaryDisk())
                     ->skipHeader((bool) $data['skipHeader'])
                     ->massCreate($this->shouldMassCreate)
                     ->handleBlankRows($this->shouldHandleBlankRows)
@@ -159,7 +160,7 @@ class ImportAction extends Action
                 $options = $this->cachedHeadingOptions;
 
                 if (count($options) == 0) {
-                    $options = $this->toCollection($filePath)->first()?->first()->filter(fn ($value) => $value != null)->toArray();
+                    $options = $this->toCollection($filePath, !App::runningUnitTests() ? $this->getTemporaryDisk() : null)->first()?->first()->filter(fn ($value) => $value != null)->map('trim')->toArray();
                 }
 
                 $selected = array_search($field->getName(), $options);
