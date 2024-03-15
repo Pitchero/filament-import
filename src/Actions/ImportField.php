@@ -11,10 +11,10 @@ use Konnco\FilamentImport\Concerns\HasFieldValidation;
 
 class ImportField
 {
-    use HasFieldMutation;
     use HasFieldHelper;
-    use HasFieldPlaceholder;
     use HasFieldLabel;
+    use HasFieldMutation;
+    use HasFieldPlaceholder;
     use HasFieldRequire;
     use HasFieldValidation;
 
